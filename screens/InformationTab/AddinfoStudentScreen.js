@@ -1,0 +1,141 @@
+import React, { useState, useEffect } from 'react';
+import { ScrollView, View, Text, TextInput, Button, StyleSheet, Dimensions } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+export default function AddinfoStudentScreen({ route, navigation }) {
+  const { student, onSave } = route.params || {};
+  const [form, setForm] = useState({
+    first_name: '',
+    last_name: '',
+    address: '',
+    tel: '',
+    birth_date: '',
+    department: '',
+  });
+
+  useEffect(() => {
+    if (student) setForm({ ...student });
+  }, [student]);
+
+  async function saveStudent() {
+    const token = await AsyncStorage.getItem('access_token');
+    if (!token) return;
+
+    try {
+      const method = student?.id ? 'PUT' : 'POST';
+      const url = student?.id
+        ? `http://127.0.0.1:8000/api/student/${student.id}`
+        : 'http://127.0.0.1:8000/api/student';
+
+      const response = await fetch(url, {
+        method,
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        body: JSON.stringify(form),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        onSave(data); // ส่งข้อมูลกลับ PortfolioScreen
+        navigation.goBack();
+      } else {
+        console.log('❌ Save failed:', data);
+      }
+    } catch (error) {
+      console.log('⚠️ Error saving student:', error);
+    }
+  }
+
+  return (
+    <ScrollView contentContainerStyle={[styles.container, { flexGrow: 1, justifyContent: 'center' }]}>
+      <Text style={styles.title}>{student ? 'Edit Info' : 'Add Info'}</Text>
+      <View style={[styles.card, { width: 600 }]}>
+        <View style={styles.row}>
+          <TextInput
+            placeholder="First Name"
+            value={form.first_name || ''}
+            onChangeText={text => setForm({ ...form, first_name: text })}
+            style={[styles.input, { marginRight: 10, flex: 1 }]}
+          />
+          <TextInput
+            placeholder="Last Name"
+            value={form.last_name || ''}
+            onChangeText={text => setForm({ ...form, last_name: text })}
+            style={[styles.input, { flex: 1 }]}
+          />
+        </View>
+
+        <TextInput
+          placeholder="Address"
+          value={form.address || ''}
+          onChangeText={text => setForm({ ...form, address: text })}
+          style={[styles.input, { height: 90 }]}
+          multiline
+        />
+
+        <View style={styles.row}>
+          <TextInput
+            placeholder="Tel"
+            value={form.tel || ''}
+            onChangeText={text => setForm({ ...form, tel: text })}
+            style={[styles.input, { marginRight: 10, flex: 1 }]}
+          />
+          <TextInput
+            placeholder="Birthday YYYY/MM/DD"
+            value={form.birth_date || ''}
+            onChangeText={text => setForm({ ...form, birth_date: text })}
+            style={[styles.input, { flex: 1 }]}
+            type="date" 
+          />
+        </View>
+
+        <TextInput
+          placeholder="Department"
+          value={form.department || ''}
+          onChangeText={text => setForm({ ...form, department: text })}
+          style={styles.input}
+        />
+      </View>
+
+      <View style={{ height: 20 }} />
+      <Button title="Save" onPress={saveStudent} />
+      <View style={{ height: 10 }} />
+      <Button title="Cancel" onPress={() => navigation.goBack()} color="gray" />
+    </ScrollView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    padding: 15,
+    backgroundColor: '#fff',
+  },
+  row: {
+    flexDirection: 'row',
+    marginBottom: 10,
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 22,
+    marginBottom: 20,
+  },
+});

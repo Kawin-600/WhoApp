@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
+import { View, Text, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createStackNavigator } from '@react-navigation/stack';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+// HomeTab
 import HomeScreen from './screens/HomeTab/HomeScreen';
+// InfomationTab
 import PortfolioScreen from './screens/InformationTab/PortfolioScreen';
 import EducationScreen from './screens/InformationTab/EducationScreen';
+import AddinfoStudentScreen from './screens/InformationTab/AddinfoStudentScreen';
+// UserTab
 import SignInScreen from './screens/UserTab/SignInScreen';
 import ProfileScreen from './screens/UserTab/ProfileScreen';
 import RegisterScreen from './screens/UserTab/RegisterScreen';
@@ -35,7 +40,9 @@ export default function App() {
     <NavigationContainer>
       <Tab.Navigator>
         <Tab.Screen name="HomeTab" component={HomeTab} />
-        <Tab.Screen name="InformationTab" component={InformationTab} />
+        <Tab.Screen name="InformationTab">
+          {() => <InformationTab isSignedIn={isSignedIn} />}
+        </Tab.Screen>
         <Tab.Screen name="UserTab">
           {() => <UserTab isSignedIn={isSignedIn} setIsSignedIn={setIsSignedIn} />}
         </Tab.Screen>
@@ -54,11 +61,29 @@ function HomeTab() {
 }
 
 // ---------------- Information Tab ----------------
-function InformationTab() {
+function RequireLogin({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+      <Text style={{ fontSize: 18, marginBottom: 20 }}>กรุณาเข้าสู่ระบบก่อนดูข้อมูล</Text>
+      <Button title="Go to Sign In" onPress={() => navigation.navigate('UserTab')} />
+    </View>
+  );
+}
+
+function InformationTab({ isSignedIn }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Portfolio" component={PortfolioScreen} />
-      <Stack.Screen name="Education" component={EducationScreen} />
+      {isSignedIn ? (
+        <>
+          <Stack.Screen name="Portfolio" component={PortfolioScreen} />
+          <Stack.Screen name="Education" component={EducationScreen} />
+          <Stack.Screen name="AddinfoStudent" component={AddinfoStudentScreen} />
+        </>
+      ) : (
+        <Stack.Screen name="RequireLogin">
+          {props => <RequireLogin {...props} />}
+        </Stack.Screen>
+      )}
     </Stack.Navigator>
   );
 }

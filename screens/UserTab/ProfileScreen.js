@@ -5,10 +5,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export default function ProfileScreen({ setIsSignedIn }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const screenWidth = Dimensions.get('window').width;
-  const boxWidth = screenWidth * 0.2; // เหมือน width ของ input หน้า Signin
-
+  
   async function Logout() {
     await AsyncStorage.removeItem('access_token');
     setIsSignedIn(false);
@@ -70,7 +67,7 @@ export default function ProfileScreen({ setIsSignedIn }) {
     <View style={styles.center}>
       <Text style={styles.title}>Profile</Text>
 
-      <View style={[styles.box, { width: boxWidth }]}>
+      <View style={[styles.box, { width: 300 }]}>
         <Text style={styles.label}>Name</Text>
         <Text style={styles.info}>{user.name}</Text>
 
