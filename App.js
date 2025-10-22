@@ -40,7 +40,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="HomeTab" component={HomeTab} />
+        <Tab.Screen name="HomeTab">
+          {() => <HomeTab isSignedIn={isSignedIn} />}
+        </Tab.Screen>
         <Tab.Screen name="InformationTab">
           {() => <InformationTab isSignedIn={isSignedIn} />}
         </Tab.Screen>
@@ -53,19 +55,35 @@ export default function App() {
 }
 
 // ---------------- Home Tab ----------------
-function HomeTab() {
+function HomeRequireLogin({ navigation }) {
+  return (
+    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
+      <Text style={{ fontSize: 26, fontWeight: 'bold', marginBottom: 10 }}>Welcome to My App</Text>
+      <Text style={{ fontSize: 16, color: '#555', marginBottom: 20 }}>Please sign in to get started.</Text>
+      <Button title="Go to Sign In" onPress={() => navigation.navigate('UserTab')} />
+    </View>
+  );
+}
+
+function HomeTab({ isSignedIn }) {
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      {isSignedIn ? (
+        <Stack.Screen name="Home" component={HomeScreen} />
+      ) : (
+        <Stack.Screen name="HomeRequireLogin">
+          {props => <HomeRequireLogin {...props} />}
+        </Stack.Screen>
+      )}
     </Stack.Navigator>
   );
 }
 
 // ---------------- Information Tab ----------------
-function RequireLogin({ navigation }) {
+function InformationRequireLogin({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-      <Text style={{ fontSize: 18, marginBottom: 20 }}>กรุณาเข้าสู่ระบบก่อนดูข้อมูล</Text>
+      <Text style={{ fontSize: 18, marginBottom: 20 }}>Please sign in to get started.</Text>
       <Button title="Go to Sign In" onPress={() => navigation.navigate('UserTab')} />
     </View>
   );
@@ -82,8 +100,8 @@ function InformationTab({ isSignedIn }) {
           <Stack.Screen name="AddEditEducation" component={AddEditEducationScreen} />
         </>
       ) : (
-        <Stack.Screen name="RequireLogin">
-          {props => <RequireLogin {...props} />}
+        <Stack.Screen name="InformationRequireLogin">
+          {props => <InformationRequireLogin {...props} />}
         </Stack.Screen>
       )}
     </Stack.Navigator>

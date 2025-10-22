@@ -77,7 +77,7 @@ export default function ProfileScreen({ setIsSignedIn }) {
 
       <View style={{ height: 20 }} />
 
-      <Button title="Sign Out" onPress={Logout} />
+      <Button title="Sign Out" onPress={Logout} color="#d9534f" />
     </View>
   );
 }
