@@ -65,7 +65,7 @@ export default function SignInScreen({ setIsSignedIn }) {
       <View style={{ height: 10 }} />
 
       <Button
-        title="Go to Register"
+        title="→ Go to Register"
         onPress={() => navigation.navigate('Register')}
       />
     </View>

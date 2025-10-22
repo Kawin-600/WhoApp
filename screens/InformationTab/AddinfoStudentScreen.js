@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, TextInput, Button, StyleSheet, Dimensions } from 'react-native';
+import { ScrollView, View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function AddinfoStudentScreen({ route, navigation }) {
@@ -17,7 +17,34 @@ export default function AddinfoStudentScreen({ route, navigation }) {
     if (student) setForm({ ...student });
   }, [student]);
 
+  function validateForm() {
+    const { first_name, last_name, address, tel, birth_date, department } = form;
+
+    // ตรวจสอบช่องว่าง
+    if (!first_name || !last_name || !address || !tel || !birth_date || !department) {
+      window.alert('ข้อมูลไม่ครบ\nกรุณากรอกข้อมูลให้ครบทุกช่อง');
+      return false;
+    }
+
+    // ตรวจสอบรูปแบบวันที่ (YYYY/MM/DD)
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+    if (!datePattern.test(birth_date)) {
+      window.alert('รูปแบบวันที่ไม่ถูกต้อง\nกรุณากรอกวันเกิดในรูปแบบ YYYY-MM-DD');
+      return false;
+    }
+
+    // ตรวจสอบเบอร์โทร (เฉพาะตัวเลข 10 หลัก)
+    const telPattern = /^\d{10}$/;
+    if (!telPattern.test(tel)) {
+      window.alert('เบอร์โทรไม่ถูกต้อง\nกรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง (10 หลัก)');
+      return false;
+    }
+
+    return true; // ผ่านทุกเงื่อนไข
+  }
+
   async function saveStudent() {
+     if (!validateForm()) return; // หยุดถ้ากรอกข้อมูลผิด
     const token = await AsyncStorage.getItem('access_token');
     if (!token) return;
 
@@ -44,9 +71,11 @@ export default function AddinfoStudentScreen({ route, navigation }) {
         navigation.goBack();
       } else {
         console.log('❌ Save failed:', data);
+        window.alert('เกิดข้อผิดพลาด\n'+ data.message + '\nไม่สามารถบันทึกข้อมูลได้');
       }
     } catch (error) {
       console.log('⚠️ Error saving student:', error);
+      window.alert('ข้อผิดพลาด\nไม่สามารถเชื่อมต่อกับเซิร์ฟเวอร์ได้');
     }
   }
 

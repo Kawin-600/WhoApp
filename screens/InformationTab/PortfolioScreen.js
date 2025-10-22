@@ -88,6 +88,12 @@ export default function PortfolioScreen() {
 
       <View style={{ height: 20 }} />
       <Button title={student ? 'Edit Info' : 'Add Info'} onPress={handleAddEdit} />
+
+      <View style={{ height: 20 }} />
+      <Button
+        title="→ Go to Education"
+        onPress={() => navigation.navigate('Education')}
+      />
     </ScrollView>
   );
 }

@@ -9,8 +9,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import HomeScreen from './screens/HomeTab/HomeScreen';
 // InfomationTab
 import PortfolioScreen from './screens/InformationTab/PortfolioScreen';
-import EducationScreen from './screens/InformationTab/EducationScreen';
 import AddinfoStudentScreen from './screens/InformationTab/AddinfoStudentScreen';
+import EducationScreen from './screens/InformationTab/EducationScreen';
+import AddEditEducationScreen from './screens/InformationTab/AddEditEducationScreen';
 // UserTab
 import SignInScreen from './screens/UserTab/SignInScreen';
 import ProfileScreen from './screens/UserTab/ProfileScreen';
@@ -78,6 +79,7 @@ function InformationTab({ isSignedIn }) {
           <Stack.Screen name="Portfolio" component={PortfolioScreen} />
           <Stack.Screen name="Education" component={EducationScreen} />
           <Stack.Screen name="AddinfoStudent" component={AddinfoStudentScreen} />
+          <Stack.Screen name="AddEditEducation" component={AddEditEducationScreen} />
         </>
       ) : (
         <Stack.Screen name="RequireLogin">

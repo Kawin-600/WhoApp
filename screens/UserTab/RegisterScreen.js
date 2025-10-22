@@ -83,7 +83,7 @@ export default function RegisterScreen({ setIsSignedIn }) {
       <View style={{ height: 10 }} />
 
       <Button
-        title="Back to Sign In"
+        title="← Back to Sign In"
         onPress={() => navigation.navigate('Signin')}
       />
     </View>
