@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ScrollView, View, Text, TextInput, Button, StyleSheet, Dimensions, Alert } from 'react-native';
+import { ScrollView, View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function AddEditEducationScreen({ route, navigation }) {
@@ -21,7 +21,7 @@ export default function AddEditEducationScreen({ route, navigation }) {
 
     // ตรวจสอบข้อมูลเบื้องต้น
     if (!form.primary_school || !form.middle_school || !form.high_school || !form.university) {
-      Alert.alert('❌ Error', 'กรุณากรอกข้อมูลให้ครบทุกช่อง');
+      window.alert('❌ Error\nกรุณากรอกข้อมูลให้ครบทุกช่อง');
       return;
     }
 
@@ -49,21 +49,18 @@ export default function AddEditEducationScreen({ route, navigation }) {
         navigation.goBack();
       } else {
         console.log('❌ Save failed:', data);
-        Alert.alert('❌ Save failed', JSON.stringify(data));
+        window.alert('❌ Save failed\n'+ JSON.stringify(data));
       }
     } catch (error) {
       console.log('⚠️ Error saving education:', error);
-      Alert.alert('⚠️ Error', 'เกิดข้อผิดพลาดในการบันทึกข้อมูล');
+      window.alert('⚠️ Error\nเกิดข้อผิดพลาดในการบันทึกข้อมูล');
     }
   }
-
-  const screenWidth = Dimensions.get('window').width;
-  const inputWidth = Math.min(screenWidth * 0.8, 800);
 
   return (
     <ScrollView contentContainerStyle={[styles.container, { flexGrow: 1, justifyContent: 'center' }]}>
       <Text style={styles.title}>{education ? 'Edit Education' : 'Add Education'}</Text>
-      <View style={[styles.card, { width: inputWidth }]}>
+      <View style={[styles.card, { width: 600 }]}>
         <TextInput
           placeholder="Primary School"
           value={form.primary_school || ''}

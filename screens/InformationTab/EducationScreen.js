@@ -82,7 +82,8 @@ export default function EducationScreen() {
       <Button title={education ? 'Edit Info' : 'Add Info'} onPress={handleAddEdit} />
 
       <View style={{ height: 20 }} />
-      <Button title="← Back to Portfolio" onPress={() => navigation.goBack()} />
+      <Button title="← Back to Portfolio" onPress={() => navigation.goBack()} color= "#495057"/>
+      
     </ScrollView>
   );
 }

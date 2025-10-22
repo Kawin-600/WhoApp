@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, Button, Alert } from 'react-native';
+import { View, Text, TextInput, Button, ScrollView, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
@@ -14,13 +14,13 @@ export default function RegisterScreen({ setIsSignedIn }) {
 
   async function Register() {
     if (!name || !email || !password) {
-      Alert.alert('Error', 'Please fill all fields');
+      window.alert('Error', 'Please fill all fields');
       return;
     }
 
     // ตรวจสอบ password confirmation
     if (password !== confirmPassword) {
-      Alert.alert('Error', 'Passwords do not match');
+      window.alert('Error', 'Passwords do not match');
       return;
     }
 
@@ -38,55 +38,82 @@ export default function RegisterScreen({ setIsSignedIn }) {
         await AsyncStorage.setItem('access_token', data);
         setIsSignedIn(true); // แค่ตั้ง isSignedIn = true UserTab จะเปลี่ยนไป ProfileScreen อัตโนมัติ
       } else {
-        Alert.alert('Register Failed', data.message || JSON.stringify(data));
+        window.alert('Register Failed', data.message || JSON.stringify(data));
       }
     } catch (error) {
-      Alert.alert('Error', error.message);
+      window.alert('Error', error.message);
     } finally {
       setLoading(false);
     }
   }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-      <Text style={{ fontSize: 20, marginBottom: 20 }}>Register</Text>
-      <TextInput
-        placeholder="Name"
-        value={name}
-        onChangeText={setName}
-        style={{ width: 300, borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 }}
-      />
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        style={{ width: 300, borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 }}
-      />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={{ width: 300, borderWidth: 1, padding: 10, marginBottom: 10, borderRadius: 5 }}
-      />
-      <TextInput
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-        style={{ width: 300, borderWidth: 1, padding: 10, marginBottom: 20, borderRadius: 5 }}
-      />
+    <ScrollView contentContainerStyle={[styles.container, { flexGrow: 1, justifyContent: 'center' }]}>
+      <Text style={styles.title}>Register</Text>
+
+      <View style={[styles.card, { width: 600 }]}>
+        <TextInput
+          placeholder="Name"
+          value={name}
+          onChangeText={setName}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+      </View>
+
+      <View style={{ height: 20 }} />
       <Button title={loading ? 'Loading...' : 'Register'} onPress={Register} disabled={loading} />
 
       <View style={{ height: 10 }} />
-
-      <Button
-        title="← Back to Sign In"
-        onPress={() => navigation.navigate('Signin')}
-      />
-    </View>
-
+      <Button title="← Back to Sign In" onPress={() => navigation.navigate('Signin')} color= "#495057" />
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    padding: 15,
+    backgroundColor: '#fff',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 22,
+    marginBottom: 20,
+  },
+});

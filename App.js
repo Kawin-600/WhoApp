@@ -39,9 +39,9 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Tab.Navigator>
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
         <Tab.Screen name="HomeTab">
-          {() => <HomeTab isSignedIn={isSignedIn} />}
+          {() => <HomeTab isSignedIn={isSignedIn}/>}
         </Tab.Screen>
         <Tab.Screen name="InformationTab">
           {() => <InformationTab isSignedIn={isSignedIn} />}
@@ -60,14 +60,14 @@ function HomeRequireLogin({ navigation }) {
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <Text style={{ fontSize: 26, fontWeight: 'bold', marginBottom: 10 }}>Welcome to My App</Text>
       <Text style={{ fontSize: 16, color: '#555', marginBottom: 20 }}>Please sign in to get started.</Text>
-      <Button title="Go to Sign In" onPress={() => navigation.navigate('UserTab')} />
+      <Button title="→ Go to Sign In" onPress={() => navigation.navigate('UserTab')} color= "#495057"/>
     </View>
   );
 }
 
 function HomeTab({ isSignedIn }) {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator>
       {isSignedIn ? (
         <Stack.Screen name="Home" component={HomeScreen} />
       ) : (
@@ -84,14 +84,14 @@ function InformationRequireLogin({ navigation }) {
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
       <Text style={{ fontSize: 18, marginBottom: 20 }}>Please sign in to get started.</Text>
-      <Button title="Go to Sign In" onPress={() => navigation.navigate('UserTab')} />
+      <Button title="→ Go to Sign In" onPress={() => navigation.navigate('UserTab')} color= "#495057"/>
     </View>
   );
 }
 
 function InformationTab({ isSignedIn }) {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator>
       {isSignedIn ? (
         <>
           <Stack.Screen name="Portfolio" component={PortfolioScreen} />
@@ -111,7 +111,7 @@ function InformationTab({ isSignedIn }) {
 // ---------------- User Tab ----------------
 function UserTab({ isSignedIn, setIsSignedIn }) {
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator>
       {isSignedIn ? (
         // ถ้า login → แสดง ProfileScreen
         <Stack.Screen name="Profile">

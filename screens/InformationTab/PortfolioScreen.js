@@ -93,6 +93,7 @@ export default function PortfolioScreen() {
       <Button
         title="→ Go to Education"
         onPress={() => navigation.navigate('Education')}
+        color= "#495057"
       />
     </ScrollView>
   );

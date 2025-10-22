@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Text, View, TextInput, Button } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, ScrollView } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useNavigation } from '@react-navigation/native';
 
@@ -31,43 +31,70 @@ export default function SignInScreen({ setIsSignedIn }) {
 }
 
   return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', padding: 20 }}>
-      <Text style={{ fontSize: 20, marginBottom: 20 }}>Sign In</Text>
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        style={{
-          width: 300,
-          borderWidth: 1,
-          padding: 10,
-          marginBottom: 10,
-          borderRadius: 5,
-        }}
+    <ScrollView contentContainerStyle={[styles.container, { flexGrow: 1, justifyContent: 'center' }]}>
+      <Text style={styles.title}>Sign In</Text>
+
+      {/* กล่อง card เหมือน AddinfoScreen */}
+      <View style={[styles.card, { width: 350 }]}>
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          style={styles.input}
+        />
+
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          style={styles.input}
+        />
+      </View>
+
+      <View style={{ height: 20 }} />
+      <Button 
+        title={loading ? 'Loading...' : 'Sign In'} 
+        onPress={Login} 
+        disabled={loading}
       />
-      <TextInput
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-        style={{
-          width: 300,
-          borderWidth: 1,
-          padding: 10,
-          marginBottom: 20,
-          borderRadius: 5,
-        }}
-      />
-      <Button title={loading ? 'Loading...' : 'Sign In'} onPress={Login} disabled={loading} />
 
       <View style={{ height: 10 }} />
-
       <Button
         title="→ Go to Register"
         onPress={() => navigation.navigate('Register')}
+        color= "#495057"
       />
-    </View>
+    </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    padding: 20,
+  },
+  card: {
+    borderWidth: 1,
+    borderColor: '#000',
+    borderRadius: 8,
+    padding: 15,
+    backgroundColor: '#fff',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    fontSize: 16,
+    marginBottom: 10,
+  },
+  title: {
+    fontSize: 22,
+    marginBottom: 20,
+  },
+});
+

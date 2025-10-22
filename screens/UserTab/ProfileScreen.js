@@ -67,7 +67,7 @@ export default function ProfileScreen({ setIsSignedIn }) {
     <View style={styles.center}>
       <Text style={styles.title}>Profile</Text>
 
-      <View style={[styles.box, { width: 300 }]}>
+      <View style={[styles.card, { width: 300 }]}>
         <Text style={styles.label}>Name</Text>
         <Text style={styles.info}>{user.name}</Text>
 
@@ -89,12 +89,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
   },
-  box: {
+  card: {
     borderWidth: 1,
-    borderRadius: 5,
-    borderColor: '#ccc',
+    borderColor: '#000',
+    borderRadius: 8,
     padding: 15,
-    marginBottom: 10,
+    backgroundColor: '#fff',
   },
   title: {
     fontSize: 22,
