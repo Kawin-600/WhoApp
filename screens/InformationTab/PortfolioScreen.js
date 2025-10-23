@@ -136,7 +136,7 @@ export default function PortfolioScreen() {
             <Button
               title="🗑 Delete Info"
               onPress={handleDelete}
-              color="#c1121f"
+              color="#dc3545"
             />
           </View>
         )}
