@@ -47,6 +47,42 @@ export default function PortfolioScreen() {
     });
   }
 
+  async function handleDelete() {
+    if (!student || !student.id) {
+      window.alert('❌ ไม่มีข้อมูลให้ลบ');
+      return;
+    }
+
+    const confirmDelete = window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?');
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      const token = await AsyncStorage.getItem('access_token');
+      const response = await fetch(`http://127.0.0.1:8000/api/student/${student.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        window.alert('✅ ลบข้อมูลเรียบร้อยแล้ว');
+        setStudent(null);
+      } else {
+        const data = await response.json();
+        console.log('❌ Delete failed:', data);
+        window.alert('❌ ลบข้อมูลไม่สำเร็จ');
+      }
+    } catch (error) {
+      console.log('⚠️ Error deleting student:', error);
+      window.alert('⚠️ เกิดข้อผิดพลาดขณะลบข้อมูล');
+    }
+  }
+
+
   if (loading) {
     return (
       <View style={styles.center}>
@@ -86,17 +122,35 @@ export default function PortfolioScreen() {
         </View>
       </View>
 
-      <View style={{ height: 20 }} />
-      <Button title={student ? 'Edit Info' : 'Add Info'} onPress={handleAddEdit} />
+      <View style={styles.buttonRow}>
+        <View style={student && student.first_name ? { flex: 1, marginRight: 10 } : { flex: 1 }}>
+          <Button
+            title={student && student.first_name ? '🖉 Edit Info' : '+ Add Info'}
+            onPress={handleAddEdit}
+            color={student && student.first_name ? '' : '#13795b'}
+          />
+        </View>
+
+        {student && student.first_name && (
+          <View style={{ flex: 1 }}>
+            <Button
+              title="🗑 Delete Info"
+              onPress={handleDelete}
+              color="#c1121f"
+            />
+          </View>
+        )}
+    </View>
 
       <View style={{ height: 20 }} />
       <Button
         title="→ Go to Education"
         onPress={() => navigation.navigate('Education')}
-        color= "#495057"
+        color="#495057"
       />
     </ScrollView>
   );
+
 }
 
 const styles = StyleSheet.create({
@@ -135,5 +189,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     marginBottom: 20,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 400,
+    marginTop: 10,
   },
 });

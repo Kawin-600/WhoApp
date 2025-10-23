@@ -47,6 +47,41 @@ export default function EducationScreen() {
     });
   }
 
+  async function handleDelete() {
+    if (!education || !education.id) {
+      window.alert('❌ ไม่มีข้อมูลให้ลบ');
+      return;
+    }
+
+    const confirmDelete = window.confirm('คุณแน่ใจหรือไม่ว่าต้องการลบข้อมูลนี้?');
+    if (!confirmDelete) {
+      return;
+    }
+
+    try {
+      const token = await AsyncStorage.getItem('access_token');
+      const response = await fetch(`http://127.0.0.1:8000/api/education/${education.id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        window.alert('✅ ลบข้อมูลเรียบร้อยแล้ว');
+        setEducation(null);
+      } else {
+        const data = await response.json();
+        console.log('❌ Delete failed:', data);
+        window.alert('❌ ลบข้อมูลไม่สำเร็จ');
+      }
+    } catch (error) {
+      console.log('⚠️ Error deleting education:', error);
+      window.alert('⚠️ เกิดข้อผิดพลาดขณะลบข้อมูล');
+    }
+  }
+
   if (loading) {
     return (
       <View style={styles.center}>
@@ -78,12 +113,27 @@ export default function EducationScreen() {
         </View>
       </View>
 
-      <View style={{ height: 20 }} />
-      <Button title={education ? 'Edit Info' : 'Add Info'} onPress={handleAddEdit} />
+      <View style={styles.buttonRow}>
+        <View style={education && education.primary_school ? { flex: 1, marginRight: 10 } : { flex: 1 }}>
+          <Button 
+            title={education && education.primary_school ? '🖉 Edit Info' : '+ Add Info'} 
+            onPress={handleAddEdit} 
+            color={education && education.primary_school ? '' : '#13795b'}  
+          />
+        </View>
+
+        {education && education.primary_school && (
+          <>
+            <View style={{ flex: 1 }}>
+              <Button title="🗑 Delete Info" onPress={handleDelete} color="#dc3545" />
+            </View>
+          </>
+        )}
+      </View>
 
       <View style={{ height: 20 }} />
-      <Button title="← Back to Portfolio" onPress={() => navigation.goBack()} color= "#495057"/>
-      
+      <Button title="← Back to Portfolio" onPress={() => navigation.goBack()} color="#495057" />
+
     </ScrollView>
   );
 }
@@ -124,5 +174,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 22,
     marginBottom: 20,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 400,
+    marginTop: 10,
   },
 });
